@@ -2,8 +2,9 @@ import uuid
 
 from django.urls import reverse
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import UniqueConstraint
+from django.db.models import UniqueConstraint, CheckConstraint, Q
 from django.db.models.functions import Lower
 
 
@@ -51,7 +52,6 @@ class Language(models.Model):
                 violation_error_message="Language already exists (case insensitive match)"
             )
         ]
-    
 
 
 class Book(models.Model):
@@ -66,7 +66,6 @@ class Book(models.Model):
     """
     title = models.CharField(max_length=200, help_text="Book's title", verbose_name="Title")
     author = models.ForeignKey('Author', on_delete=models.RESTRICT, null=True)
-    author = models.CharField(max_length=50, help_text="Author's name (and surnames)", verbose_name="Author")
     summary = models.TextField(max_length=1000, help_text="Enter a brief description of the book", verbose_name="Summary")
     isbn = models.CharField('ISBN', max_length=13, unique=True, 
                             help_text='13 character <a href="https://www.isbn-international.org/content/what-isbn">ISBN number</a>')
@@ -127,4 +126,24 @@ class Author(models.Model):
     
     def __str__(self):
         return f"{self.last_name}, {self.first_name}"
+    
+    
+class Review(models.Model):
+    """ Model representing a book review. """
+    book = models.ForeignKey(Book, on_delete=models.RESTRICT, null=True)
+    publish_date = models.DateTimeField("Publish Date", null=True, blank=True)
+    content = models.TextField(max_length=1000, help_text="Add some comments to the review.")
+    grade = models.FloatField(help_text="Add a grade from 0.0 (awful) to 10.0 (perfect)", 
+                              validators=[MinValueValidator(0.0), MaxValueValidator(10.0)])
+    # TODO: add user field
+    
+    class Meta:
+        constraints = [
+            CheckConstraint(
+                check=Q(grade__gte=0.0) & Q(grade__lte=10.0),
+                name='review_grade_min_and_max_limits'
+            )
+        ]
+        
+    # TODO: Add __str__ method
     
