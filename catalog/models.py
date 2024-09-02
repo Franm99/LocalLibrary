@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import UniqueConstraint, CheckConstraint, Q
+from django.db.models import UniqueConstraint, CheckConstraint, Q, F
 from django.db.models.functions import Lower
 
 
@@ -120,6 +120,12 @@ class Author(models.Model):
     
     class Meta:
         ordering = ['last_name', 'first_name']
+        constraints = [
+            CheckConstraint(
+                check=Q(date_of_birth__lt=F('date_of_death')),
+                name='author_date_of_birth_lower_than_date_of_death'
+            )
+        ]
         
     def get_absolute_url(self):
         return reverse('author-detail', args=[str(self.id)])
