@@ -12,6 +12,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddConstraint(
             model_name='author',
-            constraint=models.CheckConstraint(condition=models.Q(('date_of_birth__lt', models.F('date_of_death'))), name='author_date_of_birth_lower_than_date_of_death'),
+            constraint=models.CheckConstraint(check=models.Q(('date_of_birth__lt', models.F('date_of_death'))), name='author_date_of_birth_lower_than_date_of_death'),
         ),
     ]
