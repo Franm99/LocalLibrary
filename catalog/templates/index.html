@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Home</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Local Library Home</h1>
+    <p>
+        Welcome to LocalLibrary!
+    </p>
+
+    <h2>Dynamic content</h2>
+    <p>The library has the following records count:</p>
+    <ul>
+        <li><strong>Books:</strong> {{ num_books }}</li>
+        <li><strong>Copies:</strong> {{ num_instances }}</li>
+        <li><strong>Copies available:</strong> {{ num_instances_available }}</li>
+        <li><strong>Authors:</strong> {{ num_authors }}</li>
+        <li><strong>Genres:</strong> {{ num_genres }}</li>
+        <li><strong>Books containing the word "the":</strong> {{ num_books_containing_The }}</li>
+    </ul>
+
+    {% load static %}
+    <img src="{% static 'images/books_background.jpg' %}" alt="">
+
+{% endblock %}
