@@ -38,11 +38,12 @@ def index(request):
 class BookListView(ListView):
     model = Book
     context_object_name = 'book_list'  # self-defined name for the model context variable.
+    paginate_by = 10
     # template_name = 'books/book_list.html'
     
     # queryset = Book.objects.filter(author__name__iexact='George')  # Would do the same as below: 
-    def get_queryset(self) -> QuerySet[Any]:
-        return Book.objects.filter(author__name__iexact='George')
+    # def get_queryset(self) -> QuerySet[Any]:
+    #     return Book.objects.filter(author__name__iexact='George')
     
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         # Call the base implementation first to get the context
@@ -76,5 +77,15 @@ def book_detail_view(request, primary_key):
     return render(request, 'catalog/book_detail.html', context={'book': book})
 
 """
+
+
+class AuthorListView(ListView):
+    model = Author
+    context_object_name = 'author_list'
+    paginate_by = 5
+    
+
+class AuthorDetailView(DetailView):
+    model = Author
         
     
