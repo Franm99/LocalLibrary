@@ -1,5 +1,8 @@
 import uuid
 
+from datetime import date 
+
+from django.conf import settings
 from django.urls import reverse
 
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -96,6 +99,7 @@ class BookInstance(models.Model):
     book = models.ForeignKey(Book, on_delete=models.RESTRICT, null=True)
     imprint = models.CharField(max_length=200, help_text='Specific release of the book')
     due_back = models.DateField(null=True, blank=True)
+    borrower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
     
     LOAN_STATUS = (
         ('m', 'Maintenance'),
@@ -117,6 +121,11 @@ class BookInstance(models.Model):
         
     def __str__(self):
         return f'{self.id} ({self.book.title})'
+    
+    @property
+    def is_overdue(self):
+        """ Determines if the book is overdue based on the due date and current date. """
+        return bool(self.due_back and date.today() > self.due_back)
     
     
 class Author(models.Model):

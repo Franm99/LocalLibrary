@@ -21,6 +21,8 @@
         <li><strong>Books containing the word "the":</strong> {{ num_books_containing_The }}</li>
     </ul>
 
+    <p>You have visited this website {{ num_visits }} time{{ num_visits|pluralize }}!</p>
+
     {% load static %}
     <img src="{% static 'images/books_background.jpg' %}" alt="">
 
