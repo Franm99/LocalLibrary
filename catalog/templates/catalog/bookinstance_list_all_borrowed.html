@@ -8,8 +8,9 @@
         {% for bookinst in bookinstance_list %}
         <li>
             <a href="{% url 'book-detail' bookinst.book.pk %}">{{ bookinst.book.title }}</a> 
-            <span class="{% if bookinst.is_overdue %}text-danger{% endif %}">({{ bookinst.due_back }})</span> - <span>{{ bookinst.borrower}}</span>
-
+            <span class="{% if bookinst.is_overdue %}text-danger{% endif %}">({{ bookinst.due_back }})</span>
+            <span> - {% if user.is_staff %}{{ bookinst.borrower}}{% endif %}</span>
+            <span> - {% if perms.catalog.can_mark_returned %}<a href="{% url 'renew-book-librarian' bookinst.id %}">Renew</a>{% endif %}</span>
         </li>
         {% endfor %}
     </ul>
